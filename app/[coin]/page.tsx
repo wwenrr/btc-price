@@ -7,13 +7,6 @@ import { cryptoCoins } from '@/lib/sample';
 
 type TimeFrame = '1m' | '5m' | '15m' | '30m' | '1h' | '3h' | '6h' | '12h' | '1d' | '3d' | '1w' | '1M';
 
-export async function generateStaticParams() {
-  return cryptoCoins.map(coin => ({
-    coin: coin.cryptoName // Tạo tham số cho mỗi đồng tiền
-  }));
-}
-
-
 const HomePage = () => {
   const pathname = usePathname()
   const pathnameParts = pathname.split('/').filter(Boolean);
