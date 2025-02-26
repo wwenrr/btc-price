@@ -1,8 +1,10 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { createChart, CrosshairMode } from 'lightweight-charts';
 import { GetCandles, GetLiveCandle } from '@/lib/sample';
+import Link from 'next/link';
+import { ThemeContext } from '@/app/layout';
 
 type CandleData = {
   time: number;
@@ -20,6 +22,13 @@ type VolumeData = {
 
 //@ts-ignore
 const CandleVolumeChart = ({ currentCoin, currentTimeFrame }) => {
+  const context = useContext(ThemeContext);
+        if (!context) {
+        throw new Error("useContext phải được dùng bên trong ThemeContext.Provider");
+    }
+    
+    const { theme, toggleTheme } = context;
+
   const chartContainerRef = useRef(null);
   const candleSeriesRef = useRef(null);
   const volumeSeriesRef = useRef(null);
@@ -35,25 +44,25 @@ const CandleVolumeChart = ({ currentCoin, currentTimeFrame }) => {
       //@ts-ignore
       height: chartContainerRef.current.clientHeight,
       layout: {
-        backgroundColor: '#A9B5DF',
-        textColor: '#333',
+        backgroundColor: theme ? "#A9B5DF" : "#1A1A1A", // Màu nền sáng/tối
+        textColor: theme ? "#333" : "#FFF", // Màu chữ sáng/tối
       },
       grid: {
         vertLines: {
-            color: 'rgba(238, 238, 238, 0.6)',
+          color: theme ? "rgba(238, 238, 238, 0.6)" : "rgba(60, 60, 60, 0.6)", // Màu lưới sáng/tối
         },
         horzLines: {
-            color: 'rgba(238, 238, 238, 0.6)',
+          color: theme ? "rgba(238, 238, 238, 0.6)" : "rgba(60, 60, 60, 0.6)",
         },
       },
       crosshair: {
         mode: CrosshairMode.Normal,
       },
       priceScale: {
-        borderColor: '#ccc',
+        borderColor: theme ? "#ccc" : "#555", // Màu viền sáng/tối
       },
       timeScale: {
-        borderColor: '#ccc',
+        borderColor: theme ? "#ccc" : "#555",
       },
     });
 

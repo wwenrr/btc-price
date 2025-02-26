@@ -1,9 +1,12 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { cryptoCoins } from "@/lib/sample";
 import { GetCryptoInfo } from "@/lib/sample";
+import { ThemeContext } from "@/app/layout";
+import Link from "next/link";
 
 export default function Coin({coin}:{coin:any}) {
+    
     const [isHovered, setIsHovered] = useState(false);
     const [price, setPrice] = useState(-1)
 
