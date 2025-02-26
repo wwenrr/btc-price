@@ -107,82 +107,10 @@ const CandleVolumeChart = ({ currentCoin, currentTimeFrame }) => {
       volumeSeriesRef.current.setData(volumeData);
     };
 
-    fetchData();
-
-    const socket = new WebSocket(GetLiveCandle(currentTimeFrame, currentCoin));
-
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      const candle = message.k; // Dữ liệu kline
-    
-      if (candle && candle.x) {  // Kiểm tra xem nến có đóng chưa
-        const newCandle = {
-          time: candle.t / 1000,  // Thời gian chuyển sang giây
-          open: parseFloat(candle.o),
-          high: parseFloat(candle.h),
-          low: parseFloat(candle.l),
-          close: parseFloat(candle.c),
-        };
-    
-        // Kiểm tra dữ liệu nến mới
-        if (
-          !newCandle.time ||
-          !newCandle.open ||
-          !newCandle.high ||
-          !newCandle.low ||
-          !newCandle.close
-        ) {
-          console.error("Invalid candle data:", newCandle);
-          return;
-        }
-    
-        // Cập nhật dữ liệu nến
-        setCan((prevCanData) => {
-          const lastCandle = prevCanData[prevCanData.length - 1];
-    
-          if (lastCandle && newCandle.time < lastCandle.time) {
-            console.error("New candle time is less than the last candle time:", newCandle.time, lastCandle.time);
-            return prevCanData; // Không cập nhật nếu thời gian không hợp lệ
-          }
-    
-          if (lastCandle && lastCandle.time === newCandle.time) {
-            // Thay thế phần tử cuối cùng bằng nến mới
-            const updatedCanData = [...prevCanData];
-            updatedCanData[updatedCanData.length - 1] = newCandle;
-            return updatedCanData;
-          } else {
-            // Thêm nến mới vào cuối mảng
-            return [...prevCanData, newCandle];
-          }
-        });
-    
-        // Cập nhật dữ liệu volume
-        setVol((prevVolData) => {
-          const newVolumeData = {
-            time: newCandle.time,
-            value: parseFloat(candle.v),  // Sử dụng volume từ dữ liệu WebSocket
-            color: newCandle.close > newCandle.open ? '#26a69a' : '#ef5350',
-          };
-    
-          const lastVolume = prevVolData[prevVolData.length - 1];
-    
-          if (lastVolume && lastVolume.time === newVolumeData.time) {
-            // Thay thế phần tử cuối cùng bằng volume mới
-            const updatedVolData = [...prevVolData];
-            updatedVolData[updatedVolData.length - 1] = newVolumeData;
-            return updatedVolData;
-          } else {
-            // Thêm volume mới vào cuối mảng
-            return [...prevVolData, newVolumeData];
-          }
-        });
-      }
-    };
-    
+    setInterval(fetchData, 2000);  // Gọi fetchData() mỗi 2 giây (2000ms)
 
     return () => {
       chart.remove();
-      socket.close();
     };
   }, [currentCoin, currentTimeFrame]);
 
