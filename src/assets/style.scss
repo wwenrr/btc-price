@@ -1,0 +1,51 @@
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    text-decoration: none;
+}
+
+body {
+    width: 100dvw;
+    height: 100dvh;
+    min-width: 400px;
+    background-image: url("https://img.freepik.com/free-vector/hand-drawn-winter-landscape_23-2149169698.jpg");
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+
+.listItem {
+    background-color: #EAEAEA;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.listItem:hover {
+    background-color: #f0f0f0!important;
+}
+
+.listItem:active {
+    opacity: 95%;
+}
+
+.limited-text {
+    white-space: nowrap;      /* Không xuống dòng */
+    overflow: hidden;         /* Ẩn phần bị tràn */
+    text-overflow: ellipsis;  /* Thêm dấu "..." nếu quá dài */
+    display: inline-block;    /* Cần để áp dụng max-width */
+}
+
+.App {
+    margin: 0;
+    height: 100%;
+}
+
+.App {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.chart-container {
+    flex: 1;
+}
