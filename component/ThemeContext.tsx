@@ -19,6 +19,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     if (storedTheme !== null) {
       setTheme(storedTheme === "true");
     }
+    else setTheme(true)
   }, []);
 
   useEffect(() => {
