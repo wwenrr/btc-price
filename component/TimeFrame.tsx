@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ThemeContext } from "@/app/layout";
+import { ThemeContext } from "@/component/ThemeContext";
 
 export function TimeFrame({ time, cur, setTime }: { time: string, cur: string, setTime: any }) {
   const isActive = time === cur;

@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext } from "react";
 import { cryptoCoins } from "@/lib/sample";
 import { GetCryptoInfo } from "@/lib/sample";
-import { ThemeContext } from "@/app/layout";
+import { ThemeContext } from "./ThemeContext";
 import Link from "next/link";
 
 export default function Coin({coin}:{coin:any}) {

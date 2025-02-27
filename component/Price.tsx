@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { createChart, CrosshairMode } from 'lightweight-charts';
 import { GetCandles, GetLiveCandle } from '@/lib/sample';
 import Link from 'next/link';
-import { ThemeContext } from '@/app/layout';
+import { ThemeContext } from "@/component/ThemeContext";
 import { TimeFrame } from '@/app/[coin]/page';
 import {TimeFrame as TimeComp} from './TimeFrame';
 
