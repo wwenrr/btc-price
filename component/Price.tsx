@@ -5,6 +5,8 @@ import { createChart, CrosshairMode } from 'lightweight-charts';
 import { GetCandles, GetLiveCandle } from '@/lib/sample';
 import Link from 'next/link';
 import { ThemeContext } from '@/app/layout';
+import { TimeFrame } from '@/app/[coin]/page';
+import {TimeFrame as TimeComp} from './TimeFrame';
 
 type CandleData = {
   time: number;
@@ -34,6 +36,31 @@ const CandleVolumeChart = ({ currentCoin, currentTimeFrame }) => {
   const volumeSeriesRef = useRef(null);
   const [canData, setCan] = useState<CandleData[]>([]);
   const [volData, setVol] = useState<VolumeData[]>([]);
+  const [time, setTime] = useState<string>("1m")
+
+  const fetchData = async () => {
+    const data = await GetCandles(time, currentCoin);
+    const candleData = data.map((item) => ({
+      time: item.openTime / 1000,
+      open: item.open,
+      high: item.high,
+      low: item.low,
+      close: item.close,
+    }));
+    const volumeData = data.map((item) => ({
+      time: item.openTime / 1000,
+      value: item.volume,
+      color: item.close > item.open ? '#26a69a' : '#ef5350',
+    }));
+
+    setCan(canData)
+    setVol(volumeData)
+    
+    //@ts-ignore
+    candleSeriesRef.current.setData(candleData);
+    //@ts-ignore  
+    volumeSeriesRef.current.setData(volumeData);
+  };
 
   useEffect(() => {
     
@@ -92,31 +119,7 @@ const CandleVolumeChart = ({ currentCoin, currentTimeFrame }) => {
       },
     });
 
-    const fetchData = async () => {
-      const data = await GetCandles(currentTimeFrame, currentCoin);
-      const candleData = data.map((item) => ({
-        time: item.openTime / 1000,
-        open: item.open,
-        high: item.high,
-        low: item.low,
-        close: item.close,
-      }));
-      const volumeData = data.map((item) => ({
-        time: item.openTime / 1000,
-        value: item.volume,
-        color: item.close > item.open ? '#26a69a' : '#ef5350',
-      }));
-
-      setCan(canData)
-      setVol(volumeData)
-      
-      //@ts-ignore
-      candleSeriesRef.current.setData(candleData);
-      //@ts-ignore  
-      volumeSeriesRef.current.setData(volumeData);
-    };
-
-    setInterval(fetchData, 2000);  // Gọi fetchData() mỗi 2 giây (2000ms)
+    (async () => {await fetchData()})()
 
     return () => {
       chart.remove();
@@ -140,11 +143,28 @@ const CandleVolumeChart = ({ currentCoin, currentTimeFrame }) => {
     }
   }, [volData]);  // Chỉ gọi khi volData thay đổi
 
+
+  const timeFrames: TimeFrame[] = ['1m', '5m', '15m', '30m', '1h'];
+
+  useEffect(() => {
+    const intervalId = setInterval(fetchData, 1000); 
+  
+    return () => clearInterval(intervalId); 
+  }, [time]); 
+
   return (
     <>
       <a href="/"><img style={{position: "absolute", zIndex: 5, top: 10, left: 10, cursor: 'pointer'}} src="https://cdn-icons-png.flaticon.com/128/189/189254.png" width={45} height={45} alt="" /></a>
       
-      <div ref={chartContainerRef} style={{ width: '100%', height: '100%' }} />
+      <div ref={chartContainerRef} style={{ width: '70vw', height: '70vh', backgroundColor: "gray", marginTop: 40, overflow: "hidden" }} />
+
+      <div style={{position: "absolute", zIndex: 5, bottom: 60, left: 0, width: "100%", display: "flex", justifyContent: "center"}}>
+        <div style={{display: "flex", justifyContent: "center", gap: 35, width: "80%", minWidth: 500, overflow: "auto"}}>
+          {timeFrames.map((tf) => (
+            <TimeComp key={tf} time={tf} cur={time} setTime={setTime} />
+          ))}
+        </div>
+      </div>
     </>
   )
 };

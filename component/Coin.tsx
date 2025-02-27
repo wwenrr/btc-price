@@ -6,6 +6,13 @@ import { ThemeContext } from "@/app/layout";
 import Link from "next/link";
 
 export default function Coin({coin}:{coin:any}) {
+    const context = useContext(ThemeContext);
+  
+  if (!context) {
+    throw new Error("useContext phải được dùng bên trong ThemeContext.Provider");
+  }
+
+  const { theme } = context;
     
     const [isHovered, setIsHovered] = useState(false);
     const [price, setPrice] = useState(-1)
@@ -40,7 +47,9 @@ export default function Coin({coin}:{coin:any}) {
                 cursor: "pointer",
                 width: 140,
                 height: 70,
-                background: "linear-gradient(to bottom, #A1C4FD, #C2E9FB)",
+                background: theme
+            ? "linear-gradient(to bottom, #A1C4FD, #C2E9FB)" // Sáng -> Xanh nhạt
+            : "linear-gradient(to bottom, #2C3E50, #4CA1AF)",
                 position: 'relative'
               }} className="listItem">
                 <img src={coin.cryptoImage} width={45} height={45} alt={coin.cryptoName} style={{borderRadius: "100%"}} />

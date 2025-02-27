@@ -3,6 +3,7 @@
 import { useContext } from "react";
 import { cryptoCoins } from "@/lib/sample";
 import Coin from "@/component/Coin";
+import { ThemeContext } from "@/app/layout";
 
 export default function Home() {
   const cryptoList = cryptoCoins;
